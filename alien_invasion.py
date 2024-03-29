@@ -13,35 +13,41 @@ loses a ship. If the player loses three ships, the game ends.
 
 
 import sys
-
 import pygame
+from settings import Settings
+from ship import Ship
 
 class AlienInvasion:
-    """Overall class t manage the game assets and behaviour"""
+    """Overall class to manage the game assets and behavior"""
 
     def __init__(self):
         """Initialize the game, and create game resources"""
 
         pygame.init()
-
-        self.screen = pygame.display.set_mode((1200, 800))
+        self.settings = Settings()
+        self.screen = pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height))
         pygame.display.set_caption("Alien Invasion")
+        
+        #Initialize the ship
+        self.ship = Ship(self)
 
     def run_game(self):
-        """start the main loop of the game"""
+        """Start the main loop of the game"""
 
         while True:
-            #listen to keyboard and mouse events
+            # Listen to keyboard and mouse events
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    sys.exit(0);
+                    sys.exit(0)
 
+            # Redraw the screen during each pass through loop
+            self.screen.fill(self.settings.bg_color) 
+            self.ship.blitme()       
 
-            #make the most recently drawn screen visible
+            # Make the most recently drawn screen visible
             pygame.display.flip()
 
 if __name__ == "__main__":
-    #make a game instance, and run the game
+    # Make a game instance, and run the game
     ai = AlienInvasion()
     ai.run_game()
-
