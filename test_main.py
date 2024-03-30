@@ -49,6 +49,15 @@ class TestAlienInvasion(unittest.TestCase):
         self.ai._check_events()
         self.assertFalse(self.ai.ship.moving_right)
 
+    def test_fullscreen_mode(self):
+        self.assertTrue(pygame.FULLSCREEN)
+        self.assertEqual(self.ai.settings.screen_width, self.ai.screen.get_rect().width)
+        self.assertEqual(self.ai.settings.screen_height, self.ai.screen.get_rect().height)
+
+    def test_quit_game_with_q(self):
+        with self.assertRaises(SystemExit):
+            self.ai._check_keydown_events(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_q))
+
     def tearDown(self):
         pygame.quit()
 
