@@ -11,6 +11,7 @@ class TestSettings(unittest.TestCase):
         self.assertEqual(self.settings.screen_height, 800)
         self.assertEqual(self.settings.bg_color, (255, 255, 255))
         self.assertAlmostEqual(self.settings.ship_speed, 1.5)
+        self.assertEqual(self.settings.bullets_allowed, 3)
 
 if __name__ == '__main__':
     unittest.main()

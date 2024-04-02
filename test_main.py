@@ -49,6 +49,35 @@ class TestAlienInvasion(unittest.TestCase):
         self.ai._check_events()
         self.assertFalse(self.ai.ship.moving_right)
 
+    def test_fullscreen_mode(self):
+        # self.assertTrue(pygame.FULLSCREEN) #uncomment for full screen display testing
+        self.assertTrue(pygame.display.set_mode((self.settings.screen_width, self.settings.screen_height)))  
+        self.assertEqual(self.ai.settings.screen_width, self.ai.screen.get_rect().width)
+        self.assertEqual(self.ai.settings.screen_height, self.ai.screen.get_rect().height)
+
+    def test_quit_game_with_q(self):
+        with self.assertRaises(SystemExit):
+            self.ai._check_keydown_events(pygame.event.Event(pygame.KEYDOWN, key=pygame.K_q))
+
+    def test_bullet_creation(self):
+        self.ai._fire_bullet()
+        self.assertEqual(len(self.ai.bullets), 1)
+
+    # def test_update_bullets(self):
+    #     self.ai._fire_bullet()
+    #     # Simulate bullets moving upwards
+    #     for bullet in self.ai.bullets.copy():
+    #         bullet.rect.y = 10
+    #     self.ai._update_bullets()
+    #     self.assertEqual(len(self.ai.bullets), 1)  # Bullet should still be there as it hasn't reached the top of the screen
+
+    #     # Move bullet out of screen
+    #     for bullet in self.ai.bullets.copy():
+    #         if bullet.rect.bottom <= 0:
+    #             self.ai.bullets.remove(bullet)
+    #     self.ai._update_bullets()
+    #     self.assertEqual(len(self.ai.bullets), 0)  # Bullet should be removed
+
     def tearDown(self):
         pygame.quit()
 
