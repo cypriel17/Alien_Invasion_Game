@@ -95,7 +95,13 @@ class TestAlienInvasion(unittest.TestCase):
         
         self.assertEqual(len(self.ai.aliens), 2 * expected_number_of_aliens)
 
-    
+    def test_fleet_movement(self):
+        pass
+
+    def test_update_fleet(self):
+        pass
+
+
     def tearDown(self):
         pygame.quit()
 
