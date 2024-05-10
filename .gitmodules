@@ -1,0 +1,3 @@
+[submodule "Alien_Invasion_Game"]
+	path = Alien_Invasion_Game
+	url = https://github.com/cypriel17/Alien_Invasion_Game/tree/6-shooting_aliens_repopulating_fleet
