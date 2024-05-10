@@ -1,0 +1,14 @@
+{
+    "python.analysis.extraPaths": [
+        "./Alien_Invasion_Game"
+    ],
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        ".",
+        "-p",
+        "test_*.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": true
+}
