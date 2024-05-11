@@ -1,6 +1,7 @@
 import unittest
-from httpx import patch
+# from httpx import patch
 import pygame
+from alien import Alien
 from alien_invasion import AlienInvasion
 from settings import Settings
 
@@ -76,7 +77,30 @@ class TestAlienInvasion(unittest.TestCase):
     #         if bullet.rect.bottom <= 0:
     #             self.ai.bullets.remove(bullet)
     #     self.ai._update_bullets()
-    #     self.assertEqual(len(self.ai.bullets), 0)  # Bullet should be removed
+    #     self.assertEqual(len(self.ai.bullets), 1)  # Bullet should be removed
+
+    def test_create_fleet(self):
+        # Calculate expected number of aliens based on screen size
+        alien = Alien(self.ai)
+        alien_width, alien_height = alien.rect.size
+        available_space_x = self.ai.settings.screen_width - (2 * alien_width)
+        number_aliens_x = available_space_x // (2 * alien_width)
+        ship_height = self.ai.ship.rect.height
+        available_space_y = (self.ai.settings.screen_height - (3 * alien_height) - ship_height)
+        number_rows = available_space_y // (2 * alien_height)
+        expected_number_of_aliens = number_aliens_x * number_rows
+    
+        # Create fleet
+        self.ai._create_fleet()
+        
+        self.assertEqual(len(self.ai.aliens), 2 * expected_number_of_aliens)
+
+    def test_fleet_movement(self):
+        pass
+
+    def test_update_fleet(self):
+        pass
+
 
     def tearDown(self):
         pygame.quit()
