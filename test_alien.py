@@ -1,8 +1,9 @@
 import pygame
 import unittest
-from alien import Alien
+
 from alien_invasion import AlienInvasion
 from settings import Settings
+from alien import Alien
 
 class TestAlien(unittest.TestCase):
 

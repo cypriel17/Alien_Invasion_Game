@@ -32,6 +32,7 @@ class AlienInvasion:
         """Initialize the game, and create game resources"""
 
         pygame.init()
+        pygame.mixer.init()
         self.settings = Settings()
         
         # Create an instance to store game statistics.
@@ -43,6 +44,12 @@ class AlienInvasion:
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
         pygame.display.set_caption('Alien Invasion')
+        
+        
+        # Load sound effects
+        self.shoot_sound = pygame.mixer.Sound('sounds/retro-jump.wav')
+        self.explosion_sound = pygame.mixer.Sound('sounds/boom-explosion.wav')
+        
         
         # Create an instance to store game statistics,
         # and create a scoreboard.
@@ -78,6 +85,7 @@ class AlienInvasion:
         """Respond to keyboard and mouse events"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                self.stats.save_high_score()
                 sys.exit(0)
             if event.type == pygame.KEYDOWN:
                 self._check_keydown_events(event)
@@ -97,6 +105,7 @@ class AlienInvasion:
             self.stats.game_active = True
             self.sb.prep_score()
             self.sb.prep_level()
+            self.sb.prep_ships()
             
             # Get rid of any remaining aliens and  bullets
             self.aliens.empty()
@@ -116,7 +125,8 @@ class AlienInvasion:
             self.ship.moving_right = True
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = True
-        elif event.key == pygame.K_q:
+        elif event.key == pygame.K_q or event.key == pygame.K_ESCAPE:
+            print("See You Next Time!!!")
             sys.exit(0)
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
@@ -134,10 +144,14 @@ class AlienInvasion:
         # Decrement ships
         if self.stats.ships_left > 0:
             self.stats.ships_left -= 1
+            self.sb.prep_ships()
             
             # Get rid of any remaining aliens and bullets.
             self.aliens.empty()
             self.bullets.empty()
+            
+            # Play explosion sound
+            self.explosion_sound.play()
             
             # Create a new fleet and centr the ship.
             self._create_fleet()
@@ -148,12 +162,14 @@ class AlienInvasion:
         else:
             self.stats.game_active = False
             pygame.mouse.set_visible(True)
+            self._display_game_over()
 
     def _fire_bullet(self):
         """Create a new bullet and add it to the bullets group"""
         if len(self.bullets) < self.settings.bullets_allowed:
             new_bullet = Bullet(self)
             self.bullets.add(new_bullet)
+            self.shoot_sound.play()
 
     def _update_bullets(self):
         """Update position of bullets and get rid of old bullets."""
@@ -175,6 +191,8 @@ class AlienInvasion:
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
             self.sb.check_high_score()
+            # Play explosion sound for each collision
+            self.explosion_sound.play()
         
         if not self.aliens:
             # Destroy existing bullets and create new fleet.
@@ -189,7 +207,6 @@ class AlienInvasion:
     
     def _create_fleet(self):
         """Create the fleet of enemies."""
-        #Make an enemy
         alien = Alien(self)
         alien_width, alien_height = alien.rect.size
         available_space_x = self.settings.screen_width - (2 * alien_width)
@@ -201,6 +218,8 @@ class AlienInvasion:
         available_space_y = (self.settings.screen_height - (3 * alien_height) - ship_height)
         number_rows = available_space_y // (2 * alien_height)
         
+        # Set the number of rows to 4
+        number_rows = 4
         
         # Create full fleet of enemy ships
         for row_number in range(number_rows):
@@ -249,6 +268,17 @@ class AlienInvasion:
         for alien in self.aliens.sprites():
             alien.rect.y += self.settings.fleet_drop_speed
         self.settings.fleet_direction *= -1
+        
+        
+    def _display_game_over(self):
+        """Display 'Game Over' message on the screen."""
+        game_over_font = pygame.font.SysFont(None, 72)
+        game_over_image = game_over_font.render("Game Over", True, (255, 0, 0))
+        game_over_rect = game_over_image.get_rect()
+        game_over_rect.center = self.screen.get_rect().center
+        self.screen.blit(game_over_image, game_over_rect)
+        pygame.display.flip()
+        sleep(3)
 
 
     def _update_screen(self):
