@@ -1,7 +1,12 @@
 import unittest
 
+import sys
+import os
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
 import pygame
-from alien_invasion import AlienInvasion
+from main import AlienInvasion
 from game_stats import GameStats
 
 class TestGameStats(unittest.TestCase):

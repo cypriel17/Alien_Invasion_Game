@@ -1,8 +1,14 @@
 import unittest
 # from httpx import patch
+
+import sys
+import os
+
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+
 import pygame
 from alien import Alien
-from alien_invasion import AlienInvasion
+from main import AlienInvasion
 from settings import Settings
 
 class TestAlienInvasion(unittest.TestCase):
@@ -64,23 +70,23 @@ class TestAlienInvasion(unittest.TestCase):
         self.ai._fire_bullet()
         self.assertEqual(len(self.ai.bullets), 1)
 
-    # def test_update_bullets(self):
-    #     self.ai._fire_bullet()
-    #     # Simulate bullets moving upwards
-    #     for bullet in self.ai.bullets.copy():
-    #         bullet.rect.y = 10
-    #     self.ai._update_bullets()
-    #     self.assertEqual(len(self.ai.bullets), 1)  # Bullet should still be there as it hasn't reached the top of the screen
+    def test_update_bullets(self):
+        self.ai._fire_bullet()
+        # Simulate bullets moving upwards
+        for bullet in self.ai.bullets.copy():
+            bullet.rect.y = 10
+        self.ai._update_bullets()
+        self.assertEqual(len(self.ai.bullets), 1)  # Bullet should still be there as it hasn't reached the top of the screen
 
-    #     # Move bullet out of screen
-    #     for bullet in self.ai.bullets.copy():
-    #         if bullet.rect.bottom <= 0:
-    #             self.ai.bullets.remove(bullet)
-    #     self.ai._update_bullets()
-    #     self.assertEqual(len(self.ai.bullets), 1)  # Bullet should be removed
+        # Move bullet out of screen
+        for bullet in self.ai.bullets.copy():
+            if bullet.rect.bottom <= 0:
+                self.ai.bullets.remove(bullet)
+        self.ai._update_bullets()
+        self.assertEqual(len(self.ai.bullets), 1)  # Bullet should be removed
 
     def test_create_fleet(self):
-        # Calculate expected number of aliens based on screen size
+         # Calculate expected number of aliens based on screen size
         alien = Alien(self.ai)
         alien_width, alien_height = alien.rect.size
         available_space_x = self.ai.settings.screen_width - (2 * alien_width)
@@ -88,18 +94,16 @@ class TestAlienInvasion(unittest.TestCase):
         ship_height = self.ai.ship.rect.height
         available_space_y = (self.ai.settings.screen_height - (3 * alien_height) - ship_height)
         number_rows = available_space_y // (2 * alien_height)
-        expected_number_of_aliens = number_aliens_x * number_rows
-    
+        
+        # Set the number of rows to 4 as per the updated _create_fleet method
+        number_rows = 4
+        
+        expected_number_of_aliens = number_aliens_x * number_rows *2
+
         # Create fleet
         self.ai._create_fleet()
         
-        self.assertEqual(len(self.ai.aliens), 2 * expected_number_of_aliens)
-
-    def test_fleet_movement(self):
-        pass
-
-    def test_update_fleet(self):
-        pass
+        self.assertEqual(len(self.ai.aliens), expected_number_of_aliens)
 
 
     def tearDown(self):

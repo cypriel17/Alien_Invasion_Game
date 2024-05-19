@@ -51,3 +51,16 @@ class Settings:
         
         self.alien_points = int(self.alien_points * self.score_scale)
         print(self.alien_points)
+        
+        
+    # def set_difficulty(self, difficulty_level):
+    #     # Set game difficulty based on selected level
+    #     if difficulty_level == 'easy':
+    #         self.speedup_scale = 1.1
+    #         self.score_scale = 1.5
+    #     elif difficulty_level == 'medium':
+    #         self.speedup_scale = 1.2
+    #         self.score_scale = 2.0
+    #     elif difficulty_level == 'hard':
+    #         self.speedup_scale = 1.5
+    #         self.score_scale = 3.0
